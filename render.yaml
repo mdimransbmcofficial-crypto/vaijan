@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: hisab
+    runtime: python
+    plan: starter          # Persistent Disk-এর জন্য paid plan লাগে (Free-তে disk নেই)
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --workers 1 --threads 4 --timeout 120
+    envVars:
+      - key: HISAB_DATA_DIR
+        value: /data
+      - key: HISAB_PASSWORD
+        sync: false        # Render dashboard-এ নিজে পাসওয়ার্ড বসাবেন
+      - key: SECRET_KEY
+        generateValue: true
+    disk:
+      name: hisab-storage
+      mountPath: /data
+      sizeGB: 1
